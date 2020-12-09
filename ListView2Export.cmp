@@ -1,0 +1,67 @@
+<aura:component controller="Listview2ExportCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="ObjectType" type="List"/>  
+    <aura:attribute name="retListViews" type="List"/>  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="selectedObjectName" type="String" />
+    <aura:attribute name="selectedListViewName" type="String"/>
+    <aura:attribute name="displayAfterInit" type="boolean" default="false"/>
+    <aura:attribute name="ShowListViewResults" type="boolean" default="false"/> 
+    <aura:attribute name="spinner" type="boolean" default="false"/>
+    
+    <aura:if isTrue="{!v.spinner}">
+        <lightning:spinner alternativeText="Loading" size="medium"/><br/>
+    </aura:if>
+    <div style="padding: 0.2%; background: rgb(64, 64, 64);border-radius:10px 10px 0px 0px;">
+        <div class="slds-p-around_small slds-text-heading_small slds-text-color_inverse" style="text-align:center">
+            ListView Retrieve Results (Get any objects 'List View' related records data)
+        </div>
+    </div>
+    
+    <div class="slds-box slds-theme_default" style="height:90%"> 
+        <aura:if isTrue="{!v.displayAfterInit}">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-form-element slds-size_4-of-12"></div>
+                <div class="slds-col slds-form-element slds-size_4-of-12">
+                    <lightning:select label="Select an Object" onchange="{!c.getListViews}" aura:id="pickedobjValue">
+                        <option value="None">--None--</option>
+                        <aura:iteration items="{!v.ObjectType}" var="obj">
+                            <option text="{!obj}">
+                            </option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col slds-form-element slds-size_4-of-12"></div>
+            </div>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-form-element slds-size_4-of-12"></div>
+                <div class="slds-col slds-form-element slds-size_4-of-12">
+                    <aura:if isTrue="{!v.retListViews.length > 0}">
+                        <lightning:select label="Select a ListView" onchange="{!c.getResults}" aura:id="pickedLstViewValue">
+                            <option value="None">--None--</option>
+                            <aura:iteration items="{!v.retListViews}" var="lstViews">
+                                <option text="{!lstViews.Name}" value="{!lstViews.DeveloperName}">
+                                </option>
+                            </aura:iteration>
+                        </lightning:select>
+                        <aura:set attribute="else">
+                            <p class="slds-text-heading_medium" style="color:red;text-align:center;padding-top:5%"><b>No List Views exists</b></p>
+                        </aura:set>
+                    </aura:if> 
+                </div>
+                <div class="slds-col slds-form-element slds-size_4-of-12"></div>
+            </div>
+            <div style="padding-top:2%;height:80%;overflow-y: auto;">
+                <aura:if isTrue="{!v.ShowListViewResults}">
+                    <lightning:listView objectApiName="{!v.selectedObjectName}"
+                                        listName="{!v.selectedListViewName}"
+                                        rows="5"
+                                        showSearchBar="true"
+                                        showActionBar="false"
+                                        enableInlineEdit="true"
+                                        showRowLevelActions="false"
+                                        />
+                </aura:if>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>
